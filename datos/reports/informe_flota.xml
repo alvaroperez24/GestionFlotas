@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flota>
+    <vehiculo>
+        <matricula>1234ABC</matricula>
+        <marca>seat</marca>
+        <anyo>2020</anyo>
+        <categoria>familiar</categoria>
+    </vehiculo>
+</flota>

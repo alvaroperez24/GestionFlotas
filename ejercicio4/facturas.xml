@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<facturas>
+            
+    
+    <factura>
+                        
+        
+        <id>1</id>
+                        
+        
+        <importe>150.00</importe>
+                    
+        
+        <PAGADA>SI</PAGADA>
+            
+    </factura>
+            
+    
+    <factura>
+                        
+        
+        <id>2</id>
+                        
+        
+        <importe>75.50</importe>
+                    
+        
+        <PAGADA>SI</PAGADA>
+            
+    </factura>
+        
+
+</facturas>

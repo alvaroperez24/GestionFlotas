@@ -1,0 +1,9 @@
+[
+  {
+    "matricula": "1234ABC",
+    "marca": "seat",
+    "anyo": 2020,
+    "kms_recorridos": 50000,
+    "categoria": "familiar"
+  }
+]
