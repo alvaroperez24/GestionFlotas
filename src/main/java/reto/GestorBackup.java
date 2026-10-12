@@ -11,10 +11,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class GestorBackup {
-
-	final static private Path ruta = Paths.get("datos", "backup", "flota_backup.ser");
 	
-	public void crearBackUp(ArrayList<Vehiculo> vehiculos) {
+	public void crearBackUp(ArrayList<Vehiculo> vehiculos, Path ruta) {
 	    try {
 	        Files.createDirectories(ruta.getParent());
 
@@ -29,7 +27,7 @@ public class GestorBackup {
 	    }
 	}
 	
-	public void leerBackUp() {
+	public void leerBackUp(Path ruta) {
 		try(ObjectInputStream is = new ObjectInputStream(new FileInputStream(ruta.toFile()))) {
 			ArrayList<Vehiculo> vehiculos = (ArrayList<Vehiculo>) is.readObject();
 			

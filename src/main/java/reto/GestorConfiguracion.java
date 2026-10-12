@@ -16,9 +16,6 @@ public class GestorConfiguracion {
 	private int total_vehiculos;
 	private int total_km;
 	
-	private final Path rutaCarpeta = Paths.get("datos", "config");
-	private final Path rutaFinal = rutaCarpeta.resolve("empresa.dat");
-	
 	private GestorConfiguracion() {}
 
 
@@ -94,10 +91,10 @@ public class GestorConfiguracion {
 	}
 	
 	
-	public void guardarConf() {
+	public void guardarConf(Path ruta) {
         try {
-            Files.createDirectories(rutaCarpeta);
-			try(DataOutputStream dos = new DataOutputStream(Files.newOutputStream(rutaFinal))) {
+            Files.createDirectories(ruta);
+			try(DataOutputStream dos = new DataOutputStream(Files.newOutputStream(ruta))) {
 			dos.writeUTF(getNom_empresa());
 			dos.writeUTF(getVersion_soft());
 			dos.writeInt(getTotal_vehiculos());
@@ -108,8 +105,8 @@ public class GestorConfiguracion {
 		}
 	}
 	
-	public void leerConfig() {
-		try(DataInputStream dis = new DataInputStream(Files.newInputStream(rutaFinal))){
+	public void leerConfig(Path ruta) {
+		try(DataInputStream dis = new DataInputStream(Files.newInputStream(ruta))){
 			System.out.println("Nombre: " + dis.readUTF());
 			System.out.println("Version: " + dis.readUTF());
 			System.out.println("Vehiculos: " + dis.readInt());

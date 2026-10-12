@@ -3,10 +3,8 @@ package reto;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,20 +20,14 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.helpers.DefaultHandler;
-
 import org.xml.sax.Attributes;
-
 import org.xml.sax.SAXException;
 
-
-
 public class GestorReportesXML {
-
-	private final Path ruta = Paths.get("datos", "reports", "informe_flota.xml");
 	
-	private HashSet<String> categorias = new HashSet<String>();
+	static HashSet<String> categorias = new HashSet<String>();
 	
-	public void generacionDom(ArrayList<Vehiculo> vehiculos) {
+	public void generacionDom(ArrayList<Vehiculo> vehiculos, Path ruta) {
 		try {
 			Files.createDirectories(ruta.getParent());
 			
@@ -86,90 +78,50 @@ public class GestorReportesXML {
 		}
 	}
 	
-	public HashSet<String> getCategorias() {
+	static HashSet<String> getCategorias() {
 		return categorias;
 	}
 
-	public void setCategorias(HashSet<String> categorias) {
-		this.categorias = categorias;
-	}
-
-	static class gestorEventos extends DefaultHandler{
+	static class GestorEventos extends DefaultHandler {
+		private String elementoActual = "";
 		
+		@Override
+		public void startElement(String uri, String localName, String qName, Attributes attributes)
+				throws SAXException {
+			elementoActual = qName;
+		}
+		
+		@Override
+		public void characters(char[] ch, int start, int length) throws SAXException {
+			if (elementoActual.equals("categoria")) {
+				String categoria = new String(ch, start, length).trim();
+				
+				if(!elementoActual.isEmpty()) {
+					categorias.add(categoria);
+				}
+			}
+		}
+		
+		@Override
+		public void endElement(String uri, String localName, String qName) throws SAXException {
+			elementoActual = "";
+		}
 	}
-	
 
-	public static class GetEventos extends DefaultHandler {
-
-	    private HashSet<String> categorias = new HashSet<>();
-	    private StringBuilder texto = new StringBuilder();
-
-	    public HashSet<String> getCategorias() {
-	        return categorias;
-	    }
-
-	    @Override
-	    public void startElement(String uri, String localName,
-	                             String qName, Attributes attributes)
-	            throws SAXException {
-
-	        texto.setLength(0);
-	    }
-
-	    @Override
-	    public void characters(char[] ch, int start, int length)
-	            throws SAXException {
-
-	        texto.append(ch, start, length);
-	    }
-
-	    @Override
-	    public void endElement(String uri, String localName,
-	                           String qName) throws SAXException {
-
-	        if (qName.equals("categoriaMantenimiento")) {
-
-	            String categoria = texto.toString().trim();
-
-	            if (!categoria.isEmpty()) {
-	                categorias.add(categoria);
-	            }
-	        }
-
-	        texto.setLength(0);
-	    }
+	public void leerXML(Path ruta) {
+		try {
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			
+			SAXParser parser = factory.newSAXParser();
+			
+			GestorEventos handler = new GestorEventos();
+			
+			parser.parse(ruta.toFile(), handler);
+			
+			System.out.println(getCategorias());
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			System.out.println(e.getMessage());
+		}		
 	}
-	
-    public void leerXML() {
-
-        try {
-            SAXParserFactory factory =
-                    SAXParserFactory.newInstance();
-
-            SAXParser parser = factory.newSAXParser();
-
-            GetEventos eventos = new GetEventos();
-
-            parser.parse(ruta.toFile(), eventos);
-
-            HashSet<String> categorias = eventos.getCategorias();
-
-            System.out.println("Categorías de mantenimiento:");
-
-            for (String categoria : categorias) {
-                System.out.println(categoria);
-            }
-
-        } catch (ParserConfigurationException e) {
-            System.out.println("Error de configuración: " + e.getMessage());
-
-        } catch (SAXException e) {
-            System.out.println("Error al procesar el XML: " + e.getMessage());
-
-        } catch (IOException e) {
-            System.out.println("Error al leer el archivo: " + e.getMessage());
-        }
-    }
-
 	
 }

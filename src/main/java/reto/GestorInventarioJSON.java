@@ -13,8 +13,6 @@ import com.google.gson.GsonBuilder;
 
 public class GestorInventarioJSON {
 	
-	private static final Path ruta = Paths.get("datos", "json", "flota.json");
-	
 	private ArrayList<Vehiculo> listaVehiculos = new ArrayList<>();
 	
 	private HashMap<String, Vehiculo> mapaVehiculos = new HashMap<>();
@@ -26,7 +24,7 @@ public class GestorInventarioJSON {
 		mapaVehiculos.put(coche.getMatricula(), coche);
 	}
 	
-	public void crearJson() {
+	public void crearJson(Path ruta) {
 		try {
 			Files.createDirectories(ruta.getParent());
 			Files.writeString(ruta, gson.toJson(listaVehiculos));
@@ -35,7 +33,7 @@ public class GestorInventarioJSON {
 		}
 	}
 	
-	public void leerGson() {
+	public void leerGson(Path ruta) {
 		try {
 			if (!Files.exists(ruta)) {
 				listaVehiculos = new ArrayList<>();
